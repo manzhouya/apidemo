@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Type;
 
+use App\GraphQL\Fields\PictureField;
 use GraphQL\Type\Definition\Type;
 use Folklore\GraphQL\Support\Type as BaseType;
 use GraphQL;
@@ -28,6 +29,11 @@ class UserType extends BaseType
                 'type' => Type::string(),
                 'description' => 'The email of the user'
             ],
+            'comments' => [
+                'type' => Type::listOf(GraphQL::type('Comment')),
+                'description' => 'The comments by the user'
+            ],
+            'picture' => PictureField::class
         ];
     }
 
@@ -39,5 +45,14 @@ class UserType extends BaseType
     protected function resolveCreatedAtField($root, $args)
     {
         return strtolower($root->created_at);
+    }
+
+    protected function resolveCommentsField($root, $args)
+    {
+        if (isset($args['id'])) {
+            return $root->comments->where('id', $args['id']);
+        }
+
+        return $root->comments;
     }
 }

@@ -30,12 +30,22 @@ class UserQuery extends Query
 
     public function resolve($root, $args, $context, ResolveInfo $info)
     {
+        $fields = $info->getFieldSelection($depth = 3);
+
         if (isset($args['id'])) {
-            return User::where('id', $args['id'])->get();
+            $users = User::where('id', $args['id']);
         } elseif (isset($args['email'])) {
-            return User::where('email', $args['email'])->get();
+            $users = User::where('email', $args['email']);
         } else {
-            return User::all();
+            $users = User::query();
         }
+
+        foreach ($fields as $field => $keys) {
+            if ($field === 'comments') {
+                $users->with('comments');
+            }
+        }
+
+        return $users->get();
     }
 }

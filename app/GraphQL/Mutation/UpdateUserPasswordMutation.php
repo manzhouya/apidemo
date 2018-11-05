@@ -7,6 +7,7 @@ use Folklore\GraphQL\Support\Mutation;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use GraphQL;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UpdateUserPasswordMutation extends Mutation
 {
@@ -39,5 +40,10 @@ class UpdateUserPasswordMutation extends Mutation
         $user->save();
 
         return $user;
+    }
+
+    public function authenticated($root, $args, $context)
+    {
+        return JWTAuth::parseToken()->authenticate() ? true : false;
     }
 }

@@ -35,4 +35,9 @@ class User extends Authenticatable
 
         return $this->api_token;
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id', 'id');
+    }
 }
