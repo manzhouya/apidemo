@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterFormRequest;
+use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,10 +41,8 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
-        return response([
-            'status' => 'success',
-            'data' => $user
-        ]);
+        $user = fractal($user, new UserTransformer())->toArray();
+        return response()->json($user);
     }
     public function refresh()
     {

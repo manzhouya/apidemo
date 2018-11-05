@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ArticleResource;
 use Illuminate\Http\Request;
 
 use App\Article;
@@ -15,7 +16,8 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-    	return $article;
+        ArticleResource::withoutWrapping();
+    	return new ArticleResource($article);
     }
 
     public function store(Request $request)
